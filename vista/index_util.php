@@ -1,11 +1,12 @@
 <?php 
+    $formulario = "";
     $usuario = new Usuario();
     $clsCorreo=$clsPassword=$clsEncontrado="";
 
     if(count($_POST)>1 && count($_POST)<3){
         $clsCorreo=$clsPassword="is-invalid";
         $valido = true;
-        if(ISSET($_POST["email"]) && filter_var($_POST["email"],FILTER_VALIDATE_EMAIL)){
+        if(ISSET($_POST["email"])){
             $clsCorreo="is-valid";
         }else{
             $valido=false;
@@ -26,6 +27,10 @@
             //regresa un usuario solo con los campos nombre y tipo, los demás vacios
             $existe = $dao->login($usuario->correo, $usuario->contrasenia);
             if($existe){
+                session_start();
+                $_SESSION["usuario"]=$existe->nombre;
+                $_SESSION["tipo"]=$existe->tipo;
+                var_dump($_SESSION);
                 if($existe->tipo=="admin"){
                     header("Location: index_admin.php");
                 }
@@ -33,7 +38,8 @@
                     header("Location: index_coach.php");
                 }
                 else{
-                    header("Location: index_admin.php");
+                    //auxiliar enviará a página de auxiliar
+                    //header("Location: index_admin.php");
                 }
             }else{
                 //Al finalizar el guardado redireccionar a la lista

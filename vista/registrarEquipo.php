@@ -9,7 +9,12 @@
 </head>
 <body class="text-center">
     <!--Página Principal-->
-    <?php 
+    <?php
+        session_start();
+        if(!ISSET($_SESSION["usuario"])){
+        header("Location:index.php");
+        return;
+        }
         require_once('../datos/daoEquipo.php');
         require_once('registrarEquipo_util.php');
     ?>

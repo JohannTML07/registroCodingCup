@@ -17,7 +17,12 @@
 </head>
 
 <body>
-  <?php 
+  <?php
+    session_start();
+    if(!ISSET($_SESSION["usuario"])){
+      header("Location:index.php");
+      return;
+    }
     require('navbar_coach.php');
     require_once('../datos/daoEquipo.php');
     $dao=new DAOEquipo();
@@ -31,7 +36,7 @@
     }
   ?>
   <div id="contenido" class="container mt-3">
-    <span><h1>Nombre del Coach</h1></span>
+    <span><h1><?php echo strtoupper("BIENVENIDO COACH: ".$_SESSION["usuario"]);?></h1></span>
     <br>
     <button id="btnAgregar" class="btn btn-success mb-5">Agregar Equipo</button>
     <table id="tblEquipos" class="table table-striped table-hover">

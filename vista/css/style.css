@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+}
+
+body{
+    background-image: url(../imagenes/fondo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(3px);
+}
+
+#contenido{
+    background-color: #364958e7;
+    border-radius: 1rem;
+}
+
+form input{
+    margin: 1rem 0;
+}
+
+#btnEnviarLogin, #btnEnviarReg{
+    width: 100%;
+    height: 4rem;
+    margin-top: 1rem;
+}
+
+
+/*colores:
+555b6e
+89b0ae
+bee3db
+faf9f9
+ffd6ba
+
+c9e4ca
+87bba2
+55828b
+3b6064
+364958
+*/

@@ -1,0 +1,10 @@
+header img{
+    width: 150px;
+}
+
+body{
+    background-image: url(../imagenes/fondo2.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(5px);
+}

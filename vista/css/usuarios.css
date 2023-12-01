@@ -1,0 +1,21 @@
+body{
+    background-image: url(../imagenes/fondo2.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(5px);
+}
+
+.marco{
+    background-color: rgba(204, 211, 224, 0.49);
+    padding: 20px;
+    border-radius: 1rem;
+}
+
+button{
+    margin-top: 10px
+}
+
+input,
+select{
+    margin: 5px 0;
+}

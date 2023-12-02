@@ -25,7 +25,7 @@ class DAOEquipo
     * Metodo que obtiene todos los equipos de la base de datos y los
     * retorna como una lista de objetos  
     */
-	public function obtenerTodos()
+	public function obtenerTodos($idCoach)
 	{
 		try
 		{
@@ -33,10 +33,10 @@ class DAOEquipo
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3 FROM equipos");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3 FROM equipos WHERE idCoach=?");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
-			$sentenciaSQL->execute();
+			$sentenciaSQL->execute([$idCoach]);
             
             //$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
             $resultado = $sentenciaSQL->fetchAll(PDO::FETCH_OBJ);
@@ -172,9 +172,10 @@ class DAOEquipo
 		try 
 		{
             $sql = "INSERT INTO equipos
-                (nombre,miembro1,miembro2,miembro3,foto)
+                (nombre,idCoach,miembro1,miembro2,miembro3,foto)
                 VALUES
                 (:nombre,
+                :idCoach,
                 :miembro1,
                 :miembro2,
                 :miembro3,
@@ -184,6 +185,7 @@ class DAOEquipo
             $this->conexion->prepare($sql)
                  ->execute(array(
                     ':nombre'=>$obj->nombre,
+                 ':idCoach'=>$obj->idCoach,
                  ':miembro1'=>$obj->miembro1,
                  ':miembro2'=>$obj->miembro2,
                  ':miembro3'=>$obj->miembro3,

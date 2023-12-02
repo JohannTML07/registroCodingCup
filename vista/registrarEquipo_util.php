@@ -41,15 +41,16 @@
         }
 
         $equipo->nombre=ISSET($_POST["nombre"])?trim($_POST["nombre"]):"";
+        $equipo->idCoach=$_SESSION["idUsuario"];
         $equipo->miembro1=ISSET($_POST["miembro1"])?trim($_POST["miembro1"]):"";
         $equipo->miembro2=ISSET($_POST["miembro2"])?trim($_POST["miembro2"]):"";
         $equipo->miembro3=ISSET($_POST["miembro3"])?trim($_POST["miembro3"]):"";
+
 
         if($valido){
             if(ISSET($_POST["id"]) && strlen($_POST["id"])>0){ //llega el campo "id" con un dato, se va a editar
                 $equipo->id=$_POST["id"];
                 $dao = new DAOEquipo();
-                var_dump($equipo);
                 //editar() regresa true o false si se editó o no
                 if($dao->editar($equipo)){
                     echo "editado";
@@ -63,6 +64,7 @@
                 $dao= new DAOEquipo();
                 //agregar() regresa el id del registro insertado en bd
                 $agregar = $dao->agregar($equipo);
+                //var_dump($equipo);
                 if($agregar==0){
                     echo "Error al guardar el equipo";
                 }else{

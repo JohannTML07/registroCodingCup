@@ -28,6 +28,7 @@
             $existe = $dao->login($usuario->correo, $usuario->contrasenia);
             if($existe){
                 session_start();
+                $_SESSION["idUsuario"]=$existe->id;
                 $_SESSION["usuario"]=$existe->nombre;
                 $_SESSION["tipo"]=$existe->tipo;
                 var_dump($_SESSION);

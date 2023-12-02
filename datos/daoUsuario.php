@@ -33,7 +33,7 @@ class DAOUsuario
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,apellido1,apellido2,email,genero FROM Usuarios");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,correo,institucion,tipo FROM usuarios WHERE tipo!='admin'");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
 			$sentenciaSQL->execute();
@@ -48,10 +48,9 @@ class DAOUsuario
 				$obj = new Usuario();
                 $obj->id = $fila->id;
 	            $obj->nombre = $fila->nombre;
-	            $obj->apellido1 = $fila->apellido1;
-                $obj->apellido2 = $fila->apellido2;
-	            $obj->email = $fila->email;
-	            $obj->genero = $fila->genero;
+	            $obj->correo = $fila->correo;
+	            $obj->institucion = $fila->institucion;
+	            $obj->tipo = $fila->tipo;
 				//Agrega el objeto al arreglo, no necesitamos indicar un índice, usa el próximo válido
                 $lista[] = $obj;
 			}
@@ -244,7 +243,7 @@ class DAOUsuario
             //Almacenará el registro obtenido de la BD
 			$obj = null; 
             
-			$sentenciaSQL = $this->conexion->prepare("SELECT nombre,tipo FROM usuarios WHERE correo=? and contrasenia = sha2(?,224);"); 
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,tipo FROM usuarios WHERE correo=? and contrasenia = sha2(?,224);"); 
 			//Se ejecuta la sentencia sql con los parametros dentro del arreglo 
             $sentenciaSQL->execute([$correo,$contrasenia]);
             
@@ -254,6 +253,7 @@ class DAOUsuario
             if($fila){
                 $obj = new Usuario();
                 
+                $obj->id = $fila->id;
                 $obj->nombre = $fila->nombre;
                 $obj->tipo = $fila->tipo;
             }

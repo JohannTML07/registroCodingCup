@@ -26,7 +26,7 @@
     require('navbar_coach.php');
     require_once('../datos/daoEquipo.php');
     $dao=new DAOEquipo();
-    $listaEquipos=$dao->obtenerTodos();
+    $listaEquipos=$dao->obtenerTodos($_SESSION["idUsuario"]);
 
     //esto cuando se acepta la eliminación
     if(count($_POST)==1 && ISSET($_POST["eliminarId"]) && is_numeric($_POST["eliminarId"])){
@@ -37,7 +37,7 @@
   ?>
   <div id="contenido" class="container mt-3">
     <span><h1><?php echo strtoupper("BIENVENIDO COACH: ".$_SESSION["usuario"]);?></h1></span>
-    <br>
+    <h2>Equipos:</h2>
     <button id="btnAgregar" class="btn btn-success mb-5">Agregar Equipo</button>
     <table id="tblEquipos" class="table table-striped table-hover">
       <thead>
@@ -78,7 +78,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Está a punto de eliminar a: <strong id="spnPersona"></strong></p>
+          <p>Está a punto de eliminar a: <strong id="spnEquipo"></strong></p>
           <p>¿Desea continuar?</p>
         </div>
         <div class="modal-footer">

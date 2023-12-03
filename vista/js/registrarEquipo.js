@@ -1,26 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     valida();
-    if(sessionStorage.getItem('claveAEditar')){
-        cargarDatos(sessionStorage.getItem('claveAEditar'));
-    }
 
     document.getElementById("btnCancelar").addEventListener("click",(e)=>{
         window.location.replace('index_coach.php');
         e.preventDefault();
     });
-
-    /*document.getElementById("btnGuardar").addEventListener("click",(e)=>{
-        let form = document.getElementById('formularioReg');
-        if(form.checkValidity()){
-            let nombreEquipo = document.getElementById('txtNombreEquipo').value.trim();
-            let miembro1 = document.getElementById('txtMiembro1').value.trim();
-            let miembro2 = document.getElementById('txtMiembro2').value.trim();
-            let miembro3 = document.getElementById('txtMiembro3').value.trim();
-            agregar(nombreEquipo,miembro1,miembro2,miembro3);
-            e.preventDefault();
-            window.location.replace('index_coach.php');
-        }
-    });*/
 });
 
 function valida(){
@@ -42,6 +26,7 @@ function valida(){
     });
 }
 
+/* para eliminar
 function agregar(nomEquipo,m1,m2,m3){
     let equipos = [];
     //si hay algo en sessionstorage con clave a editar, se va a modificar un registro
@@ -97,4 +82,4 @@ function cargarDatos(clave){
             document.getElementById('txtMiembro3').value = equipo.miembro3;
         }
     });
-}
+}*/

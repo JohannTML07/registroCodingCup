@@ -53,7 +53,6 @@
                 $dao = new DAOEquipo();
                 //editar() regresa true o false si se editó o no
                 if($dao->editar($equipo)){
-                    echo "editado";
                     header("Location: index_coach.php");
                 }
                 else{
@@ -64,7 +63,6 @@
                 $dao= new DAOEquipo();
                 //agregar() regresa el id del registro insertado en bd
                 $agregar = $dao->agregar($equipo);
-                //var_dump($equipo);
                 if($agregar==0){
                     echo "Error al guardar el equipo";
                 }else{

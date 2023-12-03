@@ -4,6 +4,7 @@
         public $nombre="";
         public $correo="";
         public $contrasenia="";
+        public $confirmarContrasenia="";
         public $institucion="";
         public $tipo="";
     }

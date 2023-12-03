@@ -77,7 +77,7 @@ class DAOUsuario
             //Almacenará el registro obtenido de la BD
 			$obj = null; 
             
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,apellido1,apellido2,email,genero,intereses,estadoCivil,password,edad,fechaNac FROM usuarios WHERE id=?"); 
+			$sentenciaSQL = $this->conexion->prepare("SELECT nombre,correo,institucion FROM usuarios WHERE id=?"); 
 			//Se ejecuta la sentencia sql con los parametros dentro del arreglo 
             $sentenciaSQL->execute([$id]);
             
@@ -86,15 +86,9 @@ class DAOUsuario
 			
             $obj = new Usuario();
             
-            $obj->id = $fila->id;
             $obj->nombre = $fila->nombre;
-            $obj->apellido1 = $fila->apellido1;
-            $obj->apellido2 = $fila->apellido2;
-            $obj->email = $fila->email;
-            $obj->fechaNac = DateTime::createFromFormat('Y-m-d',$fila->fechaNac);
-            $obj->genero = $fila->genero;
-            $obj->edoCivil = $fila->estadoCivil;
-            $obj->intereses = $fila->intereses?explode(",",$fila->intereses):array();
+            $obj->correo = $fila->correo;
+            $obj->institucion = $fila->institucion;
            
             return $obj;
 		}
@@ -183,42 +177,27 @@ class DAOUsuario
         $clave=0;
 		try 
 		{
-            $sql = "INSERT INTO Usuarios
+            $sql = "INSERT INTO usuarios
                 (nombre,
-                apellido1,
-                apellido2,
-                email,
-                fechaNac,
-                edad,
-                genero,
-                intereses,
-                estadoCivil,
-                password)
+                correo,
+                contrasenia,
+                institucion,
+                tipo)
                 VALUES
                 (:nombre,
-                :apellido1,
-                :apellido2,
-                :email,
-                :fechaNac,
-                :edad,
-                :genero,
-                :intereses,
-                :estadoCivil,
-                sha2(:password,224));";
+                :correo,
+                :contrasenia,
+                :institucion,
+                :tipo);";
                 
             $this->conectar();
             $this->conexion->prepare($sql)
                  ->execute(array(
                     ':nombre'=>$obj->nombre,
-                 ':apellido1'=>$obj->apellido1,
-                 ':apellido2'=>$obj->apellido2,
-                 ':email'=>$obj->email,
-                 ':fechaNac'=>$obj->fechaNac->format('Y-m-d'),
-                 ':edad'=>$this->calcularEdad($obj->fechaNac),
-                 ':genero'=>$obj->genero,
-                 ':intereses'=>implode(",",$obj->intereses),
-                 ':estadoCivil'=>$obj->edoCivil,
-                 ':password'=>$obj->password));
+                 ':correo'=>$obj->correo,
+                 ':contrasenia'=>$obj->contrasenia,
+                 ':institucion'=>$obj->institucion,
+                 ':tipo'=>$obj->tipo));
                  
             $clave=$this->conexion->lastInsertId();
             return $clave;

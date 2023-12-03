@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div>
-                            <input type="text" class="form-control" id="txtInstitucionReg" placeholder="Institución" maxlength="100" required>
+                            <input type="text" class="form-control" id="txtInstitucionReg" placeholder="Institución" minlength="1" maxlength="100" required>
                             <div class="invalid-feedback text-start">No debe estar vacío</div>
                         </div>
                         <button class="btn btn-success" id="btnEnviarReg">Enviar</button>

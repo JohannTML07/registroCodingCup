@@ -8,42 +8,65 @@
     <link rel="stylesheet" href="css/usuarios.css">
 </head>
 <body>
-    <div class="container col-md-8 vh-100 ">
+    <?php
+        session_start();
+        if(!ISSET($_SESSION["usuario"])){
+        header("Location:index.php");
+        return;
+        }
+        require_once('../datos/daoUsuario.php');
+        require_once('registrarUsuario_util.php');
+    ?>
+    <div class="container col-md-5 vh-100 ">
         <div class="row justify-content-center align-items-center h-100 ">
             <div class="align-items-center col-md-8 marco">
                 <h2 class="contenido">Registro de Usuario</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="nombreCompleto">Nombre Completo:</label>
-                        <input type="text" class="form-control form-control-sm" id="nombreCompleto" name="nombreCompleto">
+                <form method="post" class="needs-validation" id="formularioReg" novalidate>
+                    <div>
+                    <input type="hidden" name="id" value="<?php echo ISSET($_POST["id"])?$_POST["id"]:"" ?>">
+                        <label for="txtNombre">Nombre Completo:</label>
+                        <input type="text" class="form-control <?=$clsNombre?>" id="txtNombre" name="nombre" value="<?=$usuario->nombre?>" placeholder="Ingrese nombre completo del usuario" maxlength="70" required>
+                        <div class="invalid-feedback text-start">No debe estar vacío y debe contener solo letras y/o "."</div>
                     </div>
-                    <div class="form-group">
-                        <label for="usuario">Usuario:</label>
-                        <input type="text" class="form-control form-control-sm " id="usuario" name="usuario">
+                    <div>
+                        <label for="txtCorreo">Correo (Usuario)</label>
+                        <input type="email" class="form-control <?=$clsCorreo?>" id="txtCorreo" name="correo" value="<?=$usuario->correo?>" placeholder="Ingrese correo (será usado para login)" maxlength="50" required>
+                        <div class="invalid-feedback text-start">
+                            <ul><li>No debe estar vacío</li><li>Debe cumplir con el formato de un correo (@ y .)</li></ul>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" class="form-control form-control-sm" id="password" name="password">
+                    <div>
+                        <label for="txtContrasenia">Contraseña</label>
+                        <input type="password" class="form-control <?=$clsContrasenia?>" id="txtContrasenia" name="contrasenia" value="<?=$usuario->contrasenia?>" placeholder="Ingrese contraseña del usuario" minlength="8" maxlength="25" required>
+                        <div class="invalid-feedback text-start">
+                            <ul><li>No debe estar vacío</li><li>Debe contener entre 8 y 25 caracteres</li></ul>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="confirmarPassword">Confirmar Contraseña:</label>
-                        <input type="password" class="form-control form-control-sm" id="confirmarPassword" name="confirmarPassword">
+                    <div>
+                        <label for="txtConfirmarContrasenia">Confirmar Contraseña</label>
+                        <input type="password" class="form-control <?=$clsConfirmaContrasenia?>" id="txtConfirmarContrasenia" name="confirmarContrasenia" value="<?=$usuario->confirmarContrasenia?>" placeholder="Confirme contraseña" minlength="8" maxlength="25" required>
+                        <div class="invalid-feedback text-start">Debe ser igual a la contraseña</div>
                     </div>
-                    <div class="form-group">
-                        <label for="tipoUsuario">Tipo de Usuario:</label>
-                        <select class="form-control form-control-sm" id="tipoUsuario" name="tipoUsuario">
-                            <option value="administrador">Administrador</option>
+                    <div>
+                        <label for="txtInstitucion">Institución</label>
+                        <input type="text" class="form-control <?=$clsInstitucion?>" id="txtInstitucion" name="institucion" value="<?=$usuario->institucion?>" placeholder="Ingrese institución" maxlength="100" required>
+                        <div class="invalid-feedback text-start">No debe estar vacío</div>
+                    </div>
+                    <div>
+                        <label for="cmbTipoUsuario">Tipo de Usuario:</label>
+                        <select class="form-control" id="cmbTipoUsuario" name="tipoUsuario" value="<?=$usuario->tipo?>">
+                            <!--<option value="administrador">Administrador</option>-->
                             <option value="coach">Coach</option>
                             <option value="auxiliar">Auxiliar</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
-                    <button type="submit" class="btn btn-danger" id="btnCancelar">Cancelar</button>
+                    <button class="btn btn-danger" id="btnCancelar">Cancelar</button>
                 </form>
             </div>
         </div>
     </div>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/registroUsuario.js"></script>
+    <script src="js/registrarUsuario.js"></script>
 </body>
 </html>

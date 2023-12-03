@@ -11,8 +11,8 @@
     <?php
         session_start();
         if(!ISSET($_SESSION["usuario"])){
-        header("Location:index.php");
-        return;
+            header("Location:index.php");
+            return;
         }
         require_once('../datos/daoUsuario.php');
         require_once('registrarUsuario_util.php');
@@ -24,7 +24,7 @@
                 <form method="post" class="needs-validation" id="formularioReg" novalidate>
                     <div>
                     <input type="hidden" name="id" value="<?php echo ISSET($_POST["id"])?$_POST["id"]:"" ?>">
-                        <label for="txtNombre">Nombre Completo:</label>
+                        <label for="txtNombre">Nombre Completo</label>
                         <input type="text" class="form-control <?=$clsNombre?>" id="txtNombre" name="nombre" value="<?=$usuario->nombre?>" placeholder="Ingrese nombre completo del usuario" maxlength="70" required>
                         <div class="invalid-feedback text-start">No debe estar vacío y debe contener solo letras y/o "."</div>
                     </div>
@@ -32,17 +32,28 @@
                         <label for="txtCorreo">Correo (Usuario)</label>
                         <input type="email" class="form-control <?=$clsCorreo?>" id="txtCorreo" name="correo" value="<?=$usuario->correo?>" placeholder="Ingrese correo (será usado para login)" maxlength="50" required>
                         <div class="invalid-feedback text-start">
-                            <ul><li>No debe estar vacío</li><li>Debe cumplir con el formato de un correo (@ y .)</li></ul>
+                            <ul><li>No debe estar vacío</li><li>Debe cumplir con el formato de un correo (@ y .)</li><span id="correoYaExiste"><?=$correoYaExiste?></ul>
                         </div>
                     </div>
-                    <div>
+                    <div id="cambiarContrasenia"<?=ISSET($_POST["id"])&&$_POST["id"]!=""?"":"hidden" ?>>
+                        <label for="cbxCambiarContrasenia">Modificar Contraseña</label>
+                        <input type="checkbox" class="form-check-input" id="cbxCambiarContrasenia">
+                    </div>
+                    <div id="contrasenia">
                         <label for="txtContrasenia">Contraseña</label>
                         <input type="password" class="form-control <?=$clsContrasenia?>" id="txtContrasenia" name="contrasenia" value="<?=$usuario->contrasenia?>" placeholder="Ingrese contraseña del usuario" minlength="8" maxlength="25" required>
+                        <div class="invalid-feedback text-start">
+                            <ul><li>No debe estar vacío</li><li>Debe contener entre 8 y 25 caracteres</li><span id="spnNoCoincide"></span></ul>
+                        </div>
+                    </div>
+                    <div id="nuevaContrasenia" hidden>
+                        <label for="txtNuevaContrasenia">Nueva Contraseña</label>
+                        <input type="password" class="form-control <?=$clsNuevaContrasenia?>" id="txtNuevaContrasenia" name="" value="<?=$usuario->nuevaContrasenia?>" placeholder="Ingrese nueva contraseña" minlength="8" maxlength="25">
                         <div class="invalid-feedback text-start">
                             <ul><li>No debe estar vacío</li><li>Debe contener entre 8 y 25 caracteres</li></ul>
                         </div>
                     </div>
-                    <div>
+                    <div id="confirmarContrasenia">
                         <label for="txtConfirmarContrasenia">Confirmar Contraseña</label>
                         <input type="password" class="form-control <?=$clsConfirmaContrasenia?>" id="txtConfirmarContrasenia" name="confirmarContrasenia" value="<?=$usuario->confirmarContrasenia?>" placeholder="Confirme contraseña" minlength="8" maxlength="25" required>
                         <div class="invalid-feedback text-start">Debe ser igual a la contraseña</div>

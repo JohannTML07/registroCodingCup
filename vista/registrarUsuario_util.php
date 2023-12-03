@@ -1,6 +1,7 @@
 <?php
     $usuario=new Usuario();
-    $clsNombre=$clsCorreo=$clsContrasenia=$clsConfirmaContrasenia=$clsInstitucion="";
+    $correoYaExiste="";
+    $clsNombre=$clsCorreo=$clsContrasenia=$clsNuevaContrasenia=$clsConfirmaContrasenia=$clsInstitucion="";
     //caso de si llega por post solo un id, quiere decir que se va a editar y el id se envió desde pagina index_admin
     if(count($_POST)==1 && ISSET($_POST["id"]) && is_numeric($_POST["id"])){
         $dao = new DAOUsuario();
@@ -8,7 +9,7 @@
         $usuario = $dao->obtenerUno($_POST["id"]);
     }
     elseif(count($_POST)>1){
-        $clsNombre=$clsCorreo=$clsContrasenia=$clsConfirmaContrasenia=$clsInstitucion="is-invalid";
+        $clsNombre=$clsCorreo=$clsContrasenia=$clsNuevaContrasenia=$clsConfirmaContrasenia=$clsInstitucion="is-invalid";
         $valido = true;
         if(ISSET($_POST["nombre"]) && (strlen(trim($_POST["nombre"]))>0 && strlen(trim($_POST["nombre"]))<71) &&
             preg_match("/^[a-zA-Z.\s]+$/",$_POST["nombre"])){
@@ -17,25 +18,53 @@
             $valido=false;
         }
 
+        $dao = new DAOUsuario();
         if(ISSET($_POST["correo"]) &&
-            filter_var($_POST["correo"],FILTER_VALIDATE_EMAIL)){
-            $clsCorreo="is-valid";
+            filter_var($_POST["correo"],FILTER_VALIDATE_EMAIL)&& !$dao->existeCorreo($_POST["correo"])){
+                $clsCorreo="is-valid";
         }else{
             $valido=false;
+            $correoYaExiste="Este correo ya está en uso";
         }
 
-        if(ISSET($_POST["contrasenia"]) && (strlen(trim($_POST["contrasenia"]))>7 && strlen(trim($_POST["contrasenia"]))<26)){
-            $clsContrasenia="is-valid";
-        }else{
-            $valido=false;
+        if(ISSET($_POST["contrasenia"])){
+            if((strlen(trim($_POST["contrasenia"]))>7 && strlen(trim($_POST["contrasenia"]))<26)){
+                $clsContrasenia="is-valid";
+            }
+            else{
+                $valido=false;
+            }
         }
+        
 
-        if(ISSET($_POST["confirmarContrasenia"]) && (strlen(trim($_POST["contrasenia"]))>7 && strlen(trim($_POST["contrasenia"]))<26) && 
-            $_POST["contrasenia"] == $_POST["confirmarContrasenia"]){
-            $clsConfirmaContrasenia="is-valid";
-        }else{
+        if(ISSET($_POST["confirmarContrasenia"])){
+            if((strlen(trim($_POST["confirmarContrasenia"]))>7 && strlen(trim($_POST["confirmarContrasenia"]))<26)){
+            if(ISSET($_POST["nuevaContrasenia"])){
+                if($_POST["nuevaContrasenia"] == $_POST["confirmarContrasenia"]){
+                    $clsNuevaContrasenia="is-valid";
+                }
+                else{
+                    $clsNuevaContrasenia="is-invalid";
+                    $valido=false;
+                }
+            }
+            else{
+                if($_POST["contrasenia"] == $_POST["confirmarContrasenia"]){
+                    $clsConfirmaContrasenia="is-valid";
+                }
+                else{
+                    $clsConfirmaContrasenia="is-invalid";
+                    $valido=false;
+                }
+            }
+            }else{
+              $valido=false;
+            }
+        }
+        else{
             $valido=false;
         }
+        
 
         if(ISSET($_POST["institucion"]) && (strlen(trim($_POST["institucion"]))>0 && strlen(trim($_POST["institucion"]))<101)){
             $clsInstitucion="is-valid";
@@ -52,21 +81,32 @@
         $usuario->nombre=ISSET($_POST["nombre"])?trim($_POST["nombre"]):"";
         $usuario->correo=ISSET($_POST["correo"])?trim($_POST["correo"]):"";
         $usuario->contrasenia=ISSET($_POST["contrasenia"])?$_POST["contrasenia"]:"";
+        $usuario->nuevaContrasenia=ISSET($_POST["nuevaContrasenia"])?$_POST["nuevaContrasenia"]:"";
         $usuario->confirmarContrasenia=ISSET($_POST["confirmarContrasenia"])?$_POST["confirmarContrasenia"]:"";
         $usuario->institucion=ISSET($_POST["institucion"])?$_POST["institucion"]:"";
         $usuario->tipo=ISSET($_POST["tipoUsuario"])?$_POST["tipoUsuario"]:"";
-
 
         if($valido){
             if(ISSET($_POST["id"]) && strlen($_POST["id"])>0){ //llega el campo "id" con un dato, se va a editar
                 $usuario->id=$_POST["id"];
                 $dao = new DAOUsuario();
-                //editar() regresa true o false si se editó o no
-                if($dao->editar($usuario)){
-                    header("Location: listadoUsuarios.php");
+                //si se va a cambiar la contraseña
+                if(ISSET($_POST["nuevaContrasenia"])){
+                    if($dao->editarContra($usuario)){
+                        header("Location: listadoUsuarios.php");
+                    }
+                    else{
+                        echo "La contrasenia no coincide";
+                    }
                 }
                 else{
-                    echo "Error al modificar el usuario";
+                    //editar() regresa true o false si se editó o no
+                    if($dao->editar($usuario)){
+                        header("Location: listadoUsuarios.php");
+                    }
+                    else{
+                        echo "Error al actualizar";
+                    }
                 }
             }
             else{ //llega el campo "id" vacio, se va a agregar

@@ -1,8 +1,10 @@
 <?php 
     $formulario = "";
+    $correoYaExiste="";
     $usuario = new Usuario();
+    $usuarioReg = new Usuario();
     $clsCorreo=$clsPassword=$clsEncontrado="";
-
+    $clsNombreReg=$clsCorreoReg=$clsContraseniaReg=$clsConfirmaContraseniaReg=$clsInstitucionReg="";
     if(count($_POST)>1 && count($_POST)<3){
         $clsCorreo=$clsPassword="is-invalid";
         $valido = true;
@@ -45,6 +47,71 @@
             }else{
                 //Al finalizar el guardado redireccionar a la lista
                 $clsEncontrado="is-invalid";
+            }
+        }
+    }
+    else if(count($_POST)>2){ //si llegan más de 2 datos por post quiere decir que se va a registrar
+        $clsNombreReg=$clsCorreoReg=$clsContraseniaReg=$clsConfirmaContraseniaReg=$clsInstitucionReg="is-invalid";
+        $valido = true;
+        if(ISSET($_POST["nombre"]) && (strlen(trim($_POST["nombre"]))>0 && strlen(trim($_POST["nombre"]))<71) &&
+            preg_match("/^[a-zA-Z.\s]+$/",$_POST["nombre"])){
+            $clsNombreReg="is-valid";
+        }else{
+            $valido=false;
+        }
+
+        $dao = new DAOUsuario();
+        if(ISSET($_POST["correo"]) &&
+            filter_var($_POST["correo"],FILTER_VALIDATE_EMAIL)){
+                if(!$dao->existeCorreo($_POST["correo"])){
+                    $clsCorreoReg="is-valid";
+                }
+                else{
+                    $valido=false;
+                    $correoYaExiste="Este correo ya está en uso";
+                }
+        }else{
+            $valido=false;
+        }
+
+        if(ISSET($_POST["contrasenia"])){
+            if((strlen(trim($_POST["contrasenia"]))>7 && strlen(trim($_POST["contrasenia"]))<26)){
+                $clsContraseniaReg="is-valid";
+            }
+            else{
+                $valido=false;
+            }
+        }
+
+        if(ISSET($_POST["confirmarContrasenia"])){
+            if($_POST["contrasenia"] == $_POST["confirmarContrasenia"]){
+                $clsConfirmaContraseniaReg="is-valid";
+            }
+            else{
+                $clsConfirmaContraseniaReg="is-invalid";
+                $valido=false;
+            }
+        }
+        else{
+            $valido=false;
+        }
+
+        $usuarioReg->nombre=ISSET($_POST["nombre"])?trim($_POST["nombre"]):"";
+        $usuarioReg->correo=ISSET($_POST["correo"])?trim($_POST["correo"]):"";
+        $usuarioReg->contrasenia=ISSET($_POST["contrasenia"])?$_POST["contrasenia"]:"";
+        $usuarioReg->confirmarContrasenia=ISSET($_POST["confirmarContrasenia"])?$_POST["confirmarContrasenia"]:"";
+        $usuarioReg->institucion=ISSET($_POST["institucion"])?$_POST["institucion"]:"";
+        $usuarioReg->tipo="coach";
+
+        if($valido){
+            $dao= new DAOUsuario();
+            //agregar() regresa el id del registro insertado en bd
+            $agregar = $dao->agregar($usuarioReg);
+            if($agregar==0){
+                echo "Error al guardar el usuario";
+            }else{
+                //Al finalizar el guardado redireccionar a la lista
+                header("location: index.php");
             }
         }
     }

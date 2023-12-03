@@ -123,7 +123,7 @@ class DAOUsuario
 	}
 
 	/**
-     * Función para editar al empleado de acuerdo al objeto recibido como parámetro
+     * Función para editar al usuario de acuerdo al objeto recibido como parámetro
      */
 	public function editar(Usuario $obj)
 	{
@@ -132,15 +132,8 @@ class DAOUsuario
 			$sql = "UPDATE usuarios
                     SET
                     nombre = ?,
-                    apellido1 = ?,
-                    apellido2 = ?,
-                    email = ?,
-                    fechaNac = ?,
-                    edad = ?,
-                    genero = ?,
-                    intereses = ?,
-                    estadoCivil = ?,
-                    password = sha2(?,224)
+                    correo = ?,
+                    institucion = ?
                     WHERE id = ?;";
 
             $this->conectar();
@@ -148,14 +141,8 @@ class DAOUsuario
             $sentenciaSQL = $this->conexion->prepare($sql);
 			$sentenciaSQL->execute(
 				array($obj->nombre,
-                      $obj->apellido1,
-                      $obj->apellido2,
-					  $obj->email,
-                      $obj->fechaNac,
-                      $this->calcularEdad($obj->fechaNac),
-                      $obj->genero=implode(",",$obj->intereses),
-                      $obj->edoCivil,
-                      $obj->password,
+                      $obj->correo,
+                      $obj->institucion,
 					  $obj->id)
 					);
             return true;
@@ -168,7 +155,42 @@ class DAOUsuario
         }
 	}
 
-	
+	/**
+     * Función para editar al usuario y su contraseña de acuerdo al objeto recibido como parámetro
+     */
+	public function editarContra(Usuario $obj)
+	{
+		try 
+		{
+			$sql = "UPDATE usuarios
+                    SET
+                    nombre = ?,
+                    correo = ?,
+                    contrasenia = sha2(?,224),
+                    institucion = ?
+                    WHERE id = ? and contrasenia = sha2(?,224);";
+
+            $this->conectar();
+            
+            $sentenciaSQL = $this->conexion->prepare($sql);
+			$sentenciaSQL->execute(
+				array($obj->nombre,
+                      $obj->correo,
+                      $obj->nuevaContrasenia,
+                      $obj->institucion,
+					  $obj->id,
+                      $obj->contrasenia)
+					);
+            return true;
+		} catch (PDOException $e){
+			//Si quieres acceder expecíficamente al numero de error
+			//se puede consultar la propiedad errorInfo
+			return false;
+		}finally{
+            Conexion::desconectar();
+        }
+	}
+
 	/**
      * Agrega un nuevo usuario de acuerdo al objeto recibido como parámetro
      */
@@ -186,7 +208,7 @@ class DAOUsuario
                 VALUES
                 (:nombre,
                 :correo,
-                :contrasenia,
+                sha2(:contrasenia,224),
                 :institucion,
                 :tipo);";
                 
@@ -238,6 +260,34 @@ class DAOUsuario
             }
 
             return $obj;
+		}
+		catch(Exception $e){
+            return null;
+		}finally{
+            Conexion::desconectar();
+        }
+    }
+
+    public function existeCorreo($correo)
+    {
+        try
+		{ 
+            $this->conectar();
+            
+            //Almacenará el registro obtenido de la BD
+			$obj = null; 
+            
+			$sentenciaSQL = $this->conexion->prepare("SELECT correo FROM usuarios WHERE correo=?;"); 
+			//Se ejecuta la sentencia sql con los parametros dentro del arreglo 
+            $sentenciaSQL->execute([$correo]);
+            
+            /*Obtiene los datos*/
+			$fila=$sentenciaSQL->fetch(PDO::FETCH_OBJ);
+			
+            if($fila){
+                return true;
+            }
+            return false;
 		}
 		catch(Exception $e){
             return null;

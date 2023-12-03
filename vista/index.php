@@ -46,29 +46,29 @@
 
                     <form method="post" class="needs-validation" id="formularioReg" novalidate hidden>
                         <div>
-                            <input type="text" class="form-control" id="txtNombreCoachReg" placeholder="Nombre del Coach" maxlength="50" required>
-                            <div class="invalid-feedback text-start">No debe estar vacío</div>
+                            <input type="text" class="form-control <?=$clsNombreReg?>" id="txtNombreCoachReg" name="nombre" value="<?=$usuarioReg->nombre?>" placeholder="Nombre del Coach" maxlength="70" required>
+                            <div class="invalid-feedback text-start">No debe estar vacío y debe contener solo letras y/o "."</div>
                         </div>
                         <div>
-                            <input type="email" class="form-control" id="txtCorreoReg" placeholder="Correo" maxlength="50" required>
+                            <input type="email" class="form-control <?=$clsCorreoReg?>" id="txtCorreoReg" name="correo" value="<?=$usuarioReg->correo?>" placeholder="Correo (será usado para login)" maxlength="50" required>
                             <div class="invalid-feedback text-start">
-                                <ul><li>No debe estar vacío</li><li>Debe cumplir con el formato de un correo (@ y .)</li></ul>
+                                <ul><li>No debe estar vacío</li><li>Debe cumplir con el formato de un correo (@ y .)</li><span id="correoYaExiste"><?=$correoYaExiste?></ul>
                             </div>
                         </div>
                         <div>
-                            <input type="password" class="form-control" id="txtContraReg" placeholder="Contraseña" minlength="8" maxlength="25" required>
+                            <input type="password" class="form-control <?=$clsContraseniaReg?>" id="txtContraReg" name="contrasenia" value="<?=$usuarioReg->contrasenia?>" placeholder="Contraseña" minlength="8" maxlength="25" required>
                             <div class="invalid-feedback text-start">
                                 <ul><li>No debe estar vacío</li><li>Debe contener entre 8 y 25 caracteres</li></ul>
                             </div>
                         </div>
                         <div>
-                            <input type="password" class="form-control" id="txtConfirmaContraReg" placeholder="Confirma Contraseña" minlength="8" maxlength="25" required>
+                            <input type="password" class="form-control <?=$clsConfirmaContraseniaReg?>" id="txtConfirmaContraReg" name="confirmarContrasenia" value="<?=$usuarioReg->confirmarContrasenia?>" placeholder="Confirme Contraseña" minlength="8" maxlength="25" required>
                             <div class="invalid-feedback text-start">
                                 <ul><li>No debe estar vacío</li><li>Debe ser igual a la contraseña</li></ul>
                             </div>
                         </div>
                         <div>
-                            <input type="text" class="form-control" id="txtInstitucionReg" placeholder="Institución" minlength="1" maxlength="100" required>
+                            <input type="text" class="form-control <?=$clsInstitucion?>" id="txtInstitucionReg" name="institucion" value="<?=$usuarioReg->institucion?>" placeholder="Institución" minlength="1" maxlength="100" required>
                             <div class="invalid-feedback text-start">No debe estar vacío</div>
                         </div>
                         <button class="btn btn-success" id="btnEnviarReg">Enviar</button>

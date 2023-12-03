@@ -12,8 +12,8 @@
     <?php
         session_start();
         if(!ISSET($_SESSION["usuario"])){
-        header("Location:index.php");
-        return;
+            header("Location:index.php");
+            return;
         }
         require_once('../datos/daoEquipo.php');
         require_once('registrarEquipo_util.php');

@@ -66,7 +66,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Está a punto de eliminar a: <strong id="spnUsuario"></strong></p>
+          <p>Está a punto de eliminar al usuario: <strong id="spnUsuario"></strong></p>
+          <p>Considere que también eliminará toda información de este usuario como equipos o permisos de acceso</p>
           <p>¿Desea continuar?</p>
         </div>
         <div class="modal-footer">

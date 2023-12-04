@@ -6,6 +6,7 @@
         public $miembro1="";
         public $miembro2="";
         public $miembro3="";
+        public $estatus="";
         public $foto=null;
     }
 ?>

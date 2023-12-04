@@ -67,8 +67,8 @@
                         <label for="cmbTipoUsuario">Tipo de Usuario:</label>
                         <select class="form-control" id="cmbTipoUsuario" name="tipoUsuario" value="<?=$usuario->tipo?>">
                             <!--<option value="administrador">Administrador</option>-->
-                            <option value="coach">Coach</option>
-                            <option value="auxiliar">Auxiliar</option>
+                            <option value="coach" <?=($usuario->tipo=="coach")?"selected":"";?>>Coach</option>
+                            <option value="auxiliar" <?=($usuario->tipo=="auxiliar")?"selected":"";?>>Auxiliar</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>

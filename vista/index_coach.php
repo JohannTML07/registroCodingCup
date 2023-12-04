@@ -47,6 +47,7 @@
           <th>Miembro 1</th>
           <th>Miembro 2</th>
           <th>Miembro 3</th>
+          <th>Estatus</th>
           <th>Reconocimiento</th>
           <th>Operaciones</th>
         </tr>
@@ -59,6 +60,7 @@
                     "<td>".trim($equipo->miembro1)."</td>".
                     "<td>".trim($equipo->miembro2)."</td>".
                     "<td>".trim($equipo->miembro3)."</td>".
+                    "<td>".trim($equipo->estatus)."</td>".
                     "<td>"."<button class='btn btn-success'>Descargar</button>"."</td>".
                     "<td><form method='post'>".
                       "<button formaction='registrarEquipo.php' class='btn btn-primary' name='id' value='".$equipo->id."'>Editar</button>".

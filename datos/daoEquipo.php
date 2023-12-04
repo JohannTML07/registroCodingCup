@@ -33,7 +33,7 @@ class DAOEquipo
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3 FROM equipos WHERE idCoach=?");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3,estatus FROM equipos WHERE idCoach=?");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
 			$sentenciaSQL->execute([$idCoach]);
@@ -51,6 +51,7 @@ class DAOEquipo
 	            $obj->miembro1 = $fila->miembro1;
 	            $obj->miembro2 = $fila->miembro2;
 	            $obj->miembro3 = $fila->miembro3;
+	            $obj->estatus = $fila->estatus;
 				//Agrega el objeto al arreglo, no necesitamos indicar un índice, usa el próximo válido
                 $lista[] = $obj;
 			}

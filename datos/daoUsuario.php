@@ -77,7 +77,7 @@ class DAOUsuario
             //Almacenará el registro obtenido de la BD
 			$obj = null; 
             
-			$sentenciaSQL = $this->conexion->prepare("SELECT nombre,correo,institucion FROM usuarios WHERE id=?"); 
+			$sentenciaSQL = $this->conexion->prepare("SELECT nombre,correo,institucion,tipo FROM usuarios WHERE id=?"); 
 			//Se ejecuta la sentencia sql con los parametros dentro del arreglo 
             $sentenciaSQL->execute([$id]);
             
@@ -88,6 +88,7 @@ class DAOUsuario
             
             $obj->nombre = $fila->nombre;
             $obj->correo = $fila->correo;
+            $obj->tipo= $fila->tipo;
             $obj->institucion = $fila->institucion;
            
             return $obj;
@@ -133,7 +134,8 @@ class DAOUsuario
                     SET
                     nombre = ?,
                     correo = ?,
-                    institucion = ?
+                    institucion = ?,
+                    tipo = ?
                     WHERE id = ?;";
 
             $this->conectar();
@@ -143,6 +145,7 @@ class DAOUsuario
 				array($obj->nombre,
                       $obj->correo,
                       $obj->institucion,
+                      $obj->tipo,
 					  $obj->id)
 					);
             return true;
@@ -167,7 +170,8 @@ class DAOUsuario
                     nombre = ?,
                     correo = ?,
                     contrasenia = sha2(?,224),
-                    institucion = ?
+                    institucion = ?,
+                    tipo = ?
                     WHERE id = ? and contrasenia = sha2(?,224);";
 
             $this->conectar();
@@ -178,6 +182,7 @@ class DAOUsuario
                       $obj->correo,
                       $obj->nuevaContrasenia,
                       $obj->institucion,
+                      $obj->tipo,
 					  $obj->id,
                       $obj->contrasenia)
 					);

@@ -19,12 +19,21 @@
         }
 
         $dao = new DAOUsuario();
-        if(ISSET($_POST["correo"]) &&
-            filter_var($_POST["correo"],FILTER_VALIDATE_EMAIL)&& !$dao->existeCorreo($_POST["correo"])){
+        if(ISSET($_POST["correo"]) && filter_var($_POST["correo"],FILTER_VALIDATE_EMAIL)){
+            if(ISSET($_POST["id"]) && strlen($_POST["id"])>0){ //caso de que llegue el id para editar
                 $clsCorreo="is-valid";
+            }
+            else{
+                if(!$dao->existeCorreo($_POST["correo"])){
+                    $clsCorreo="is-valid";
+                }
+                else{
+                    $correoYaExiste="Este correo ya está en uso";
+                    $valido=false;
+                }
+            }
         }else{
             $valido=false;
-            $correoYaExiste="Este correo ya está en uso";
         }
 
         if(ISSET($_POST["contrasenia"])){
@@ -35,7 +44,6 @@
                 $valido=false;
             }
         }
-        
 
         if(ISSET($_POST["confirmarContrasenia"])){
             if((strlen(trim($_POST["confirmarContrasenia"]))>7 && strlen(trim($_POST["confirmarContrasenia"]))<26)){
@@ -61,10 +69,6 @@
               $valido=false;
             }
         }
-        else{
-            $valido=false;
-        }
-        
 
         if(ISSET($_POST["institucion"]) && (strlen(trim($_POST["institucion"]))>0 && strlen(trim($_POST["institucion"]))<101)){
             $clsInstitucion="is-valid";
@@ -90,8 +94,11 @@
             if(ISSET($_POST["id"]) && strlen($_POST["id"])>0){ //llega el campo "id" con un dato, se va a editar
                 $usuario->id=$_POST["id"];
                 $dao = new DAOUsuario();
+                var_dump($usuario);
+                var_dump($_POST);
                 //si se va a cambiar la contraseña
                 if(ISSET($_POST["nuevaContrasenia"])){
+                    
                     if($dao->editarContra($usuario)){
                         header("Location: listadoUsuarios.php");
                     }

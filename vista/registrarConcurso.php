@@ -10,11 +10,11 @@
 <body class="text-center">
     <!--Página Principal-->
     <?php
-        /*session_start();
-        if($_SESSION["tipo"]=="coach"){
+        session_start();
+        if($_SESSION["tipo"]=="coach" || !ISSET($_SESSION["usuario"])){
             header("Location:index.php");
             return;
-        }*/
+        }
         require_once('../datos/daoConcurso.php');
         require_once('registrarConcurso_util.php');
     ?>

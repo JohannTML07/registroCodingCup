@@ -11,7 +11,7 @@
   <?php 
     session_start();
     
-    if($_SESSION["tipo"]=="coach"){
+    if($_SESSION["tipo"]=="coach" || !ISSET($_SESSION["usuario"])){
       header("Location:index.php");
       return;
     }

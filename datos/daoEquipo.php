@@ -65,6 +65,50 @@ class DAOEquipo
         }
 	}
     
+    public function obtenerTodosEquipos($idConcurso)
+	{
+		try
+		{
+            $this->conectar();
+            
+			$lista = array();
+            /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
+			$sentenciaSQL = $this->conexion->prepare("SELECT e.id, e.nombre, u.institucion AS institucion,e.miembro1, e.miembro2, e.miembro3, u.nombre AS nombre_coach, e.estatus
+			FROM equipos e
+			JOIN usuarios u ON e.idCoach = u.id
+			WHERE e.idConcurso = ?;");
+			
+            //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
+			$sentenciaSQL->execute([$idConcurso]);
+            
+            //$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $sentenciaSQL->fetchAll(PDO::FETCH_OBJ);
+            /*Podemos obtener un cursor (resultado con todos los renglones como 
+            un arreglo de arreglos asociativos o un arreglo de objetos*/
+            /*Se recorre el cursor para obtener los datos*/
+			foreach($resultado as $fila)
+			{
+				$obj = new Equipo();
+                $obj->id = $fila->id;
+	            $obj->nombre = $fila->nombre;
+	            $obj->miembro1 = $fila->miembro1;
+	            $obj->miembro2 = $fila->miembro2;
+	            $obj->miembro3 = $fila->miembro3;
+	            $obj->institucion = $fila->institucion;
+	            $obj->nombreCoach = $fila->nombre_coach;
+	            $obj->estatus = $fila->estatus;
+				//Agrega el objeto al arreglo, no necesitamos indicar un índice, usa el próximo válido
+                $lista[] = $obj;
+			}
+            
+			return $lista;
+		}
+		catch(PDOException $e){
+			return null;
+		}finally{
+            Conexion::desconectar();
+        }
+	}
     
 	/**
      * Metodo que obtiene un registro de la base de datos, retorna un objeto  
@@ -121,11 +165,53 @@ class DAOEquipo
 		}finally{
             Conexion::desconectar();
         }
-
-		
         
 	}
     
+	/**
+     * Aprueba el equipo con el id indicado como parámetro
+     */
+	public function aprobar($id)
+	{
+		try 
+		{
+			$this->conectar();
+            
+            $sentenciaSQL = $this->conexion->prepare("UPDATE equipos SET estatus = 'aceptado' WHERE id=?");			          
+			$resultado=$sentenciaSQL->execute(array($id));
+			return $resultado;
+		} catch (PDOException $e) 
+		{
+			//Si quieres acceder expecíficamente al numero de error
+			//se puede consultar la propiedad errorInfo
+			return false;	
+		}finally{
+            Conexion::desconectar();
+        }
+	}
+
+	/**
+     * Aprueba el equipo con el id indicado como parámetro
+     */
+	public function desaprobar($id)
+	{
+		try 
+		{
+			$this->conectar();
+            
+            $sentenciaSQL = $this->conexion->prepare("UPDATE equipos SET estatus = 'no aceptado' WHERE id=?");			          
+			$resultado=$sentenciaSQL->execute(array($id));
+			return $resultado;
+		} catch (PDOException $e) 
+		{
+			//Si quieres acceder expecíficamente al numero de error
+			//se puede consultar la propiedad errorInfo
+			return false;	
+		}finally{
+            Conexion::desconectar();
+        }
+	}
+
 	/**
      * Función para editar al empleado de acuerdo al objeto recibido como parámetro
      */

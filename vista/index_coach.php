@@ -19,7 +19,7 @@
 <body>
   <?php
     session_start();
-    if(!ISSET($_SESSION["usuario"])){
+    if($_SESSION["tipo"]!="coach"){
       header("Location:index.php");
       return;
     }

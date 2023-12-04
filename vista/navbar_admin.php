@@ -13,7 +13,7 @@
           <a class="nav-link active" aria-current="page" href="listadoUsuarios.php">Usuarios</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="index.php">Cerrar Sesión</a>
+          <a class="nav-link active" aria-current="page" href="cerrarSesion.php">Cerrar Sesión</a>
         </li>
       </ul>
     </div>

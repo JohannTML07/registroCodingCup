@@ -18,15 +18,15 @@
         <div class="row justify-content-center align-items-center h-100">
             <div class="row p-3 justify-content-center col-5" id="contenido">
                 <div class="btn-group w-100" role="group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnIniciarSesion" autocomplete="off" checked>
+                    <input type="radio" class="btn-check" name="btnradio" id="btnIniciarSesion" autocomplete="off" <?=$checkedReg==true?"":"checked"?>>
                     <label class="btn btn-outline-light" for="btnIniciarSesion">Iniciar Sesión</label>
                 
-                    <input type="radio" class="btn-check" name="btnradio" id="btnRegistrarse" autocomplete="off">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnRegistrarse" autocomplete="off" <?=$checkedReg==true?"checked":""?>>
                     <label class="btn btn-outline-light" for="btnRegistrarse">Registrarse</label>
                 </div>
-                <h1 class="text-white m-4 w-auto" id="tituloLogin">INICIO DE SESIÓN</h1>
+                <h1 class="text-white m-4 w-auto" id="tituloLogin"><?=$checkedReg==true?"REGISTRARSE":"INICIO DE SESIÓN"?></h1>
                 <div>
-                    <form method="post" class="needs-validation" id="formularioLogin" novalidate>
+                    <form method="post" class="needs-validation" id="formularioLogin" novalidate <?=$esconderReg==true?"":"hidden"?>>
                         <div>
                             <input type="email" class="form-control <?=$clsCorreo?>" id="txtCorreoLogin" name="email" value="<?=$usuario->correo?>" placeholder="Correo" maxlength="50" required>
                             <div class="invalid-feedback text-start">
@@ -44,7 +44,7 @@
                         <button class="btn btn-success" id="btnEnviarLogin">Enviar</button>
                     </form>
 
-                    <form method="post" class="needs-validation" id="formularioReg" novalidate hidden>
+                    <form method="post" class="needs-validation" id="formularioReg" novalidate <?=$esconderReg==true?"hidden":""?>>
                         <div>
                             <input type="text" class="form-control <?=$clsNombreReg?>" id="txtNombreCoachReg" name="nombre" value="<?=$usuarioReg->nombre?>" placeholder="Nombre del Coach" maxlength="70" required>
                             <div class="invalid-feedback text-start">No debe estar vacío y debe contener solo letras y/o "."</div>

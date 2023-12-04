@@ -11,10 +11,10 @@
     <!--Página Principal-->
     <?php
         session_start();
-        if(!ISSET($_SESSION["usuario"])){
+        if($_SESSION["tipo"]!="coach"){
             header("Location:index.php");
             return;
-        }
+          }
         require_once('../datos/daoEquipo.php');
         require_once('registrarEquipo_util.php');
     ?>

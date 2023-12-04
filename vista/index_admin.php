@@ -13,10 +13,11 @@
 <body>
   <?php 
     session_start();
-    if(!ISSET($_SESSION["usuario"])){
+    if($_SESSION["tipo"]=="coach"){
       header("Location:index.php");
       return;
     }
+    
     require('navbar_admin.php');
   ?>
   <div id="contenido" class="container mt-3">

@@ -10,10 +10,10 @@
 <body>
     <?php
         session_start();
-        if(!ISSET($_SESSION["usuario"])){
+        if($_SESSION["tipo"]!="admin"){
             header("Location:index.php");
             return;
-        }
+          }
         require_once('../datos/daoUsuario.php');
         require_once('registrarUsuario_util.php');
     ?>

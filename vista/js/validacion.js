@@ -1,5 +1,17 @@
 document.addEventListener('DOMContentLoaded',(() => {
     valida();
+    document.getElementById("txtConfirmaContraReg").addEventListener('input',()=>{
+        let contra1 = document.getElementById("txtContraReg");
+        let contra2 = document.getElementById("txtConfirmaContraReg");
+        if(contra1.value != contra2.value){
+            contra2.classList.remove("is-valid");
+            contra2.classList.add("is-invalid");
+          }
+          else{
+            contra2.classList.remove("is-invalid");
+            contra2.classList.add("is-valid");
+          }
+    });
     document.getElementById("btnIniciarSesion").addEventListener('click',inicioORegistro);
     document.getElementById("btnRegistrarse").addEventListener('click',inicioORegistro);
     document.getElementById("btnEnviarLogin").addEventListener('click',enviar);

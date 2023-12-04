@@ -1,6 +1,10 @@
 <?php 
     $formulario = "";
     $correoYaExiste="";
+
+    $checkedReg = false;
+    $esconderReg = true;
+
     $usuario = new Usuario();
     $usuarioReg = new Usuario();
     $clsCorreo=$clsPassword=$clsEncontrado="";
@@ -42,7 +46,7 @@
                 }
                 else{
                     //auxiliar enviará a página de auxiliar
-                    //header("Location: index_admin.php");
+                    header("Location: index_admin.php");
                 }
             }else{
                 //Al finalizar el guardado redireccionar a la lista
@@ -51,6 +55,8 @@
         }
     }
     else if(count($_POST)>2){ //si llegan más de 2 datos por post quiere decir que se va a registrar
+        $checkedReg = true;
+        $esconderReg = false;
         $clsNombreReg=$clsCorreoReg=$clsContraseniaReg=$clsConfirmaContraseniaReg=$clsInstitucionReg="is-invalid";
         $valido = true;
         if(ISSET($_POST["nombre"]) && (strlen(trim($_POST["nombre"]))>0 && strlen(trim($_POST["nombre"]))<71) &&

@@ -1,12 +1,12 @@
 <?php
 //importa la clase conexión y el modelo para usarlos
 require_once 'conexion.php'; 
-require_once '../modelos/equipo.php'; 
+require_once '../modelos/concurso.php'; 
 
-class DAOEquipo
+class DAOConcurso
 {
     
-	private $conexion; 
+	private $conexion;
     
     /**
      * Permite obtener la conexión a la BD
@@ -22,10 +22,10 @@ class DAOEquipo
     }
     
    /**
-    * Metodo que obtiene todos los equipos de la base de datos y los
+    * Metodo que obtiene todos los concursos de la base de datos y los
     * retorna como una lista de objetos  
     */
-	public function obtenerTodos($idCoach)
+	public function obtenerTodos()
 	{
 		try
 		{
@@ -33,26 +33,24 @@ class DAOEquipo
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3,estatus FROM equipos WHERE idCoach=?");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,fechaInscripcion,fechaCierre FROM concursos");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
-			$sentenciaSQL->execute([$idCoach]);
+			$sentenciaSQL->execute();
             
             //$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
             $resultado = $sentenciaSQL->fetchAll(PDO::FETCH_OBJ);
             /*Podemos obtener un cursor (resultado con todos los renglones como 
             un arreglo de arreglos asociativos o un arreglo de objetos*/
             /*Se recorre el cursor para obtener los datos*/
-            var_dump($this);
+            
 			foreach($resultado as $fila)
 			{
-				$obj = new Equipo();
+				$obj = new Concurso();
                 $obj->id = $fila->id;
 	            $obj->nombre = $fila->nombre;
-	            $obj->miembro1 = $fila->miembro1;
-	            $obj->miembro2 = $fila->miembro2;
-	            $obj->miembro3 = $fila->miembro3;
-	            $obj->estatus = $fila->estatus;
+	            $obj->fechaInscripcion = $fila->fechaInscripcion;
+	            $obj->fechaCierre = $fila->fechaCierre;
 				//Agrega el objeto al arreglo, no necesitamos indicar un índice, usa el próximo válido
                 $lista[] = $obj;
 			}
@@ -79,19 +77,18 @@ class DAOEquipo
             //Almacenará el registro obtenido de la BD
 			$obj = null; 
             
-			$sentenciaSQL = $this->conexion->prepare("SELECT nombre, miembro1, miembro2, miembro3 FROM equipos WHERE id=?"); 
+			$sentenciaSQL = $this->conexion->prepare("SELECT nombre,fechaInscripcion,fechaCierre FROM concursos WHERE id=?"); 
 			//Se ejecuta la sentencia sql con los parametros dentro del arreglo 
             $sentenciaSQL->execute([$id]);
             
             /*Obtiene los datos*/
 			$fila=$sentenciaSQL->fetch(PDO::FETCH_OBJ);
 			
-            $obj = new Equipo();
-            
-            $obj->nombre = $fila->nombre;
-            $obj->miembro1 = $fila->miembro1;
-            $obj->miembro2 = $fila->miembro2;
-            $obj->miembro3 = $fila->miembro3;
+            $obj = new Concurso();
+
+	        $obj->nombre = $fila->nombre;
+	        $obj->fechaInscripcion = $fila->fechaInscripcion;
+	        $obj->fechaCierre = $fila->fechaCierre;
            
             return $obj;
 		}
@@ -103,7 +100,7 @@ class DAOEquipo
 	}
     
     /**
-     * Elimina el usuario con el id indicado como parámetro
+     * Elimina el concurso con el id indicado como parámetro
      */
 	public function eliminar($id)
 	{
@@ -111,7 +108,7 @@ class DAOEquipo
 		{
 			$this->conectar();
             
-            $sentenciaSQL = $this->conexion->prepare("DELETE FROM equipos WHERE id = ?");			          
+            $sentenciaSQL = $this->conexion->prepare("DELETE FROM concursos WHERE id = ?");			          
 			$resultado=$sentenciaSQL->execute(array($id));
 			return $resultado;
 		} catch (PDOException $e) 
@@ -122,25 +119,20 @@ class DAOEquipo
 		}finally{
             Conexion::desconectar();
         }
-
-		
-        
 	}
     
 	/**
-     * Función para editar al empleado de acuerdo al objeto recibido como parámetro
+     * Función para editar el concurso de acuerdo al objeto recibido como parámetro
      */
-	public function editar(Equipo $obj)
+	public function editar(Concurso $obj)
 	{
 		try 
 		{
-			$sql = "UPDATE equipos
+			$sql = "UPDATE concursos
                     SET
                     nombre = ?,
-                    miembro1 = ?,
-                    miembro2 = ?,
-                    miembro3 = ?,
-                    foto = ?
+                    fechaInscripcion = ?,
+                    fechaCierre = ?
                     WHERE id = ?;";
 
             $this->conectar();
@@ -148,10 +140,8 @@ class DAOEquipo
             $sentenciaSQL = $this->conexion->prepare($sql);
 			$sentenciaSQL->execute(
 				array($obj->nombre,
-                      $obj->miembro1,
-                      $obj->miembro2,
-                      $obj->miembro3,
-					  $obj->foto,
+                      $obj->fechaInscripcion,
+                      $obj->fechaCierre,
 					  $obj->id)
 					);
             return true;
@@ -166,32 +156,26 @@ class DAOEquipo
 
 	
 	/**
-     * Agrega un nuevo usuario de acuerdo al objeto recibido como parámetro
+     * Agrega un nuevo concurso de acuerdo al objeto recibido como parámetro
      */
-    public function agregar(Equipo $obj)
+    public function agregar(Concurso $obj)
 	{
         $clave=0;
 		try 
 		{
-            $sql = "INSERT INTO equipos
-                (nombre,idCoach,miembro1,miembro2,miembro3,foto)
+            $sql = "INSERT INTO concursos
+                (nombre,fechaInscripcion,fechaCierre)
                 VALUES
                 (:nombre,
-                :idCoach,
-                :miembro1,
-                :miembro2,
-                :miembro3,
-                :foto);";
+                :fechaInscripcion,
+                :fechaCierre);";
                 
             $this->conectar();
             $this->conexion->prepare($sql)
                  ->execute(array(
                     ':nombre'=>$obj->nombre,
-                 ':idCoach'=>$obj->idCoach,
-                 ':miembro1'=>$obj->miembro1,
-                 ':miembro2'=>$obj->miembro2,
-                 ':miembro3'=>$obj->miembro3,
-                 ':foto'=>$obj->foto
+                 ':fechaInscripcion'=>$obj->fechaInscripcion,
+                 ':fechaCierre'=>$obj->fechaCierre
                 ));
                  
             $clave=$this->conexion->lastInsertId();

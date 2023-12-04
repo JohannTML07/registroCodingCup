@@ -27,6 +27,7 @@
     require_once('../datos/daoEquipo.php');
     $dao=new DAOEquipo();
     $listaEquipos=$dao->obtenerTodos($_SESSION["idUsuario"]);
+    //var_dump($listaEquipos);
 
     //esto cuando se acepta la eliminación
     if(count($_POST)==1 && ISSET($_POST["eliminarId"]) && is_numeric($_POST["eliminarId"])){

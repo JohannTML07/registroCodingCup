@@ -9,8 +9,15 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="index_admin.php">Concursos</a>
         </li>
-        <li class="nav-item">
+        <?php 
+        if($_SESSION["tipo"]=="admin"){
+          echo '<li class="nav-item">
           <a class="nav-link active" aria-current="page" href="listadoUsuarios.php">Usuarios</a>
+          </li>';
+        }
+        ?>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="index_admin.php">Equipos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="cerrarSesion.php">Cerrar Sesión</a>

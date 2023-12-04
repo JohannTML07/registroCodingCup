@@ -19,59 +19,83 @@
     }
     
     require('navbar_admin.php');
+    require_once('../datos/daoConcurso.php');
+    $dao=new DAOConcurso();
+    $listaConcursos=$dao->obtenerTodos();
+
+    //esto cuando se acepta la eliminación
+    if(count($_POST)==1 && ISSET($_POST["eliminarId"]) && is_numeric($_POST["eliminarId"])){
+      if($dao->eliminar($_POST["eliminarId"])){
+        header("Location: ".$_SERVER["PHP_SELF"]);
+      }
+    }
   ?>
+  
   <div id="contenido" class="container mt-3">
+    <span><h1><?php echo strtoupper("BIENVENIDO ".$_SESSION["tipo"].": ".$_SESSION["usuario"]);?></h1></span>
+    <h2>Concursos:</h2>
+    <button id="btnAgregar" class="btn btn-success mb-5">Agregar Concurso</button>
     <table id="tblPersonas" class="table table-striped table-hover">
       <thead>
         <tr>
-          <th>Concurso actual</th>
-          <th>Equipos actuales</th>
+          <th>id</th>
+          <th>Concursos</th>
+          <!--<th>Equipos registrados</th>-->
           <th>Fecha de inscripción</th>
           <th>Fecha de cierre</th>
-          <th>Equipo ganador</th>
+          <th>Operaciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+      <?php
+        foreach ($listaConcursos as $concurso){
+          echo "<tr><td>".$concurso->id."</td>".
+                    "<td>".trim($concurso->nombre)."</td>".
+                    "<td>".trim($concurso->fechaInscripcion)."</td>".
+                    "<td>".trim($concurso->fechaCierre)."</td>".
+                    "<td><form method='post'>".
+                      "<button formaction='registrarConcurso.php' class='btn btn-primary' name='id' value='".$concurso->id."'>Editar</button>".
+                      //"<span>$concurso->nombre</span>"
+                      "<button type='button' class='btn btn-danger' onclick='previoEliminar(this,".'"'.$concurso->nombre.'"'.")' name='id' value='".$concurso->id."'>Eliminar</button>".
+                    "</form></td></tr>";
+        }
+      ?>
       </tbody>
     </table>
   </div>
 
-  <div class="modal" id="mdlConfirmacion" tabindex="-1">
-    <div class="modal-dialog">
+  <div class="modal fade" id="mdlConfirmacion" aria-hidden="true" aria-labelledby="confirmarEliminacion" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header primary">
-          <h5 class="modal-title">Confirmar eliminación</h5>
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="confirmarEliminacion">Confirmar eliminación</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Está a punto de eliminar a: <strong id="spnPersona"></strong> ¿Desea continuar? </p>
+          <p>Está a punto de eliminar el concurso: <strong id="spnConcurso"></strong></p>
+          <p>¿Desea continuar?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-          <button type="button" class="btn btn-danger" id="btnConfirmar" data-bs-toggle="modal" 
-          data-bs-target="#mdlAvisoEliminación">Si, continuar con la eliminación</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#mdlMensajeEliminado">Si</button>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="modal" id="mdlAvisoEliminación" tabindex="-1">
-    <div class="modal-dialog">
+  <div class="modal fade" id="mdlMensajeEliminado" aria-hidden="true" aria-labelledby="eliminadoSeguro" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header secundary">
-          <h5 class="modal-title">Catálogo de personas</h5>
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="eliminadoSeguro">Concurso eliminado</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>El registro ha sido eliminado</p>
+          <p>Se ha eliminado correctamente el concurso</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="btnConfirmar" data-bs-dismiss="modal">Cerrar</button>
+          <form method='post'>
+            <button type="submit" class="btn btn-secondary" id="btnConfirmar" name="eliminarId" data-bs-dismiss="modal">Cerrar</button>
+          </form>
         </div>
       </div>
     </div>
@@ -80,7 +104,7 @@
   <script src="dt/jQuery-3.7.0/jquery-3.7.0.min.js"></script>
   <script src="dt/DataTables-1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="dt/DataTables-1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="js/llenarTabla.js"></script>
+  <script src="js/llenarTablaConcursos.js"></script>
 </body>
 
 </html>

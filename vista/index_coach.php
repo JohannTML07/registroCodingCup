@@ -25,9 +25,12 @@
     }
     require('navbar_coach.php');
     require_once('../datos/daoEquipo.php');
+    require_once('../datos/daoConcurso.php');
+
+    $daoConcurso = new DAOConcurso();
+    $concursoActivo=$daoConcurso->buscarActivo();
     $dao=new DAOEquipo();
-    $listaEquipos=$dao->obtenerTodos($_SESSION["idUsuario"]);
-    //var_dump($listaEquipos);
+    $listaEquipos=$dao->obtenerTodos($_SESSION["idUsuario"],$concursoActivo->id);
 
     //esto cuando se acepta la eliminación
     if(count($_POST)==1 && ISSET($_POST["eliminarId"]) && is_numeric($_POST["eliminarId"])){
@@ -38,6 +41,7 @@
   ?>
   <div id="contenido" class="container mt-3">
     <span><h1><?php echo strtoupper("BIENVENIDO COACH: ".$_SESSION["usuario"]);?></h1></span>
+    <span><h2><?php echo strtoupper("CONCURSO ACTIVO: ".$concursoActivo->nombre);?></h2></span>
     <h2>Equipos:</h2>
     <button id="btnAgregar" class="btn btn-success mb-5">Agregar Equipo</button>
     <table id="tblEquipos" class="table table-striped table-hover">

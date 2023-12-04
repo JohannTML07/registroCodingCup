@@ -1,4 +1,6 @@
 <?php
+    $daoConcurso = new DAOConcurso();
+    $concursoActivo=$daoConcurso->buscarActivo();
     $equipo=new Equipo();
     //$nombre=$miembro1=$miembro2=$miembro3="";
     $clsNombre=$clsMiembro1=$clsMiembro2=$clsMiembro3="";
@@ -60,6 +62,8 @@
                 }
             }
             else{ //llega el campo "id" vacio, se va a agregar
+                var_dump($concursoActivo);
+                $equipo->idConcurso = $concursoActivo->id;
                 $dao= new DAOEquipo();
                 //agregar() regresa el id del registro insertado en bd
                 $agregar = $dao->agregar($equipo);

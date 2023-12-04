@@ -16,6 +16,7 @@
             return;
           }
         require_once('../datos/daoEquipo.php');
+        require_once('../datos/daoConcurso.php');
         require_once('registrarEquipo_util.php');
     ?>
 

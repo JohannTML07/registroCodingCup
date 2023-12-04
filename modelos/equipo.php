@@ -7,6 +7,7 @@
         public $miembro2="";
         public $miembro3="";
         public $estatus="";
+        public $idConcurso=0;
         public $foto=null;
     }
 ?>

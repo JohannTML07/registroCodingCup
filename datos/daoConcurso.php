@@ -33,7 +33,7 @@ class DAOConcurso
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,fechaInscripcion,fechaCierre,estatus FROM concursos order by nombre,estatus desc");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,fechaInscripcion,fechaCierre,estatus FROM concursos order by estatus desc, fechaCierre desc");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
 			$sentenciaSQL->execute();
@@ -134,6 +134,37 @@ class DAOConcurso
             $sentenciaSQL = $this->conexion->prepare("UPDATE concursos SET estatus = 'desactivado' WHERE id>=1; UPDATE concursos SET estatus = 'activado' WHERE id = ?");			          
 			$resultado=$sentenciaSQL->execute(array($id));
 			return $resultado;
+		} catch (PDOException $e) 
+		{
+			//Si quieres acceder expecíficamente al numero de error
+			//se puede consultar la propiedad errorInfo
+			return false;	
+		}finally{
+            Conexion::desconectar();
+        }
+	}
+
+	/**
+     * Elimina el concurso con el id indicado como parámetro
+     */
+	public function buscarActivo()
+	{
+		try 
+		{
+			$this->conectar();
+            
+			$obj = null;
+            $sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,fechaCierre FROM concursos WHERE estatus='activado';");			          
+			$sentenciaSQL->execute();
+			$fila=$sentenciaSQL->fetch(PDO::FETCH_OBJ);
+			
+            $obj = new Concurso();
+
+	        $obj->id = $fila->id;
+	        $obj->nombre = $fila->nombre;
+	        $obj->fechaCierre = $fila->fechaCierre;
+           
+            return $obj;
 		} catch (PDOException $e) 
 		{
 			//Si quieres acceder expecíficamente al numero de error

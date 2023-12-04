@@ -25,7 +25,7 @@ class DAOEquipo
     * Metodo que obtiene todos los equipos de la base de datos y los
     * retorna como una lista de objetos  
     */
-	public function obtenerTodos($idCoach)
+	public function obtenerTodos($idCoach, $idConcurso)
 	{
 		try
 		{
@@ -33,10 +33,10 @@ class DAOEquipo
             
 			$lista = array();
             /*Se arma la sentencia sql para seleccionar todos los registros de la base de datos*/
-			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3,estatus FROM equipos WHERE idCoach=?");
+			$sentenciaSQL = $this->conexion->prepare("SELECT id,nombre,miembro1,miembro2,miembro3,estatus FROM equipos WHERE idCoach=? and idConcurso=?");
 			
             //Se ejecuta la sentencia sql, retorna un cursor con todos los elementos
-			$sentenciaSQL->execute([$idCoach]);
+			$sentenciaSQL->execute([$idCoach, $idConcurso]);
             
             //$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
             $resultado = $sentenciaSQL->fetchAll(PDO::FETCH_OBJ);
@@ -173,14 +173,15 @@ class DAOEquipo
 		try 
 		{
             $sql = "INSERT INTO equipos
-                (nombre,idCoach,miembro1,miembro2,miembro3,foto)
+                (nombre,idCoach,miembro1,miembro2,miembro3,foto,idConcurso)
                 VALUES
                 (:nombre,
                 :idCoach,
                 :miembro1,
                 :miembro2,
                 :miembro3,
-                :foto);";
+                :foto,
+                :idConcurso);";
                 
             $this->conectar();
             $this->conexion->prepare($sql)
@@ -190,7 +191,8 @@ class DAOEquipo
                  ':miembro1'=>$obj->miembro1,
                  ':miembro2'=>$obj->miembro2,
                  ':miembro3'=>$obj->miembro3,
-                 ':foto'=>$obj->foto
+                 ':foto'=>$obj->foto,
+                 ':idConcurso'=>$obj->idConcurso
                 ));
                  
             $clave=$this->conexion->lastInsertId();

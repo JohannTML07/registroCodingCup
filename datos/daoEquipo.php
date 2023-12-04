@@ -43,7 +43,6 @@ class DAOEquipo
             /*Podemos obtener un cursor (resultado con todos los renglones como 
             un arreglo de arreglos asociativos o un arreglo de objetos*/
             /*Se recorre el cursor para obtener los datos*/
-            var_dump($this);
 			foreach($resultado as $fila)
 			{
 				$obj = new Equipo();

@@ -29,6 +29,12 @@
         header("Location: ".$_SERVER["PHP_SELF"]);
       }
     }
+
+    if(count($_POST)==1 && ISSET($_POST["activarId"]) && is_numeric($_POST["activarId"])){
+      if($dao->activar($_POST["activarId"])){
+        header("Location: ".$_SERVER["PHP_SELF"]);
+      }
+    }
   ?>
   
   <div id="contenido" class="container mt-3">
@@ -43,6 +49,7 @@
           <!--<th>Equipos registrados</th>-->
           <th>Fecha de inscripción</th>
           <th>Fecha de cierre</th>
+          <th>Estatus</th>
           <th>Operaciones</th>
         </tr>
       </thead>
@@ -53,7 +60,9 @@
                     "<td>".trim($concurso->nombre)."</td>".
                     "<td>".trim($concurso->fechaInscripcion)."</td>".
                     "<td>".trim($concurso->fechaCierre)."</td>".
+                    "<td>".trim($concurso->estatus)."</td>".
                     "<td><form method='post'>".
+                      "<button type='button' class='btn btn-warning' onclick='previoActivar(this,".'"'.$concurso->nombre.'"'.")' name='activar' value='".$concurso->id."'>Activar</button>".
                       "<button formaction='registrarConcurso.php' class='btn btn-primary' name='id' value='".$concurso->id."'>Editar</button>".
                       //"<span>$concurso->nombre</span>"
                       "<button type='button' class='btn btn-danger' onclick='previoEliminar(this,".'"'.$concurso->nombre.'"'.")' name='id' value='".$concurso->id."'>Eliminar</button>".
@@ -95,6 +104,44 @@
         <div class="modal-footer">
           <form method='post'>
             <button type="submit" class="btn btn-secondary" id="btnConfirmar" name="eliminarId" data-bs-dismiss="modal">Cerrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal aceptar activación -->
+  <div class="modal fade" id="mdlActivacion" aria-hidden="true" aria-labelledby="confirmarActivacion" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="confirmarActivacion">Confirmar activación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Está a punto de activar el concurso: <strong id="spnConcursoActivar"></strong></p>
+          <p>¿Desea continuar?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#mdlMensajeActivado">Si</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="mdlMensajeActivado" aria-hidden="true" aria-labelledby="activadoSeguro" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fs-5" id="activadoSeguro">Concurso activado</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Se ha activado correctamente el concurso</p>
+        </div>
+        <div class="modal-footer">
+          <form method='post'>
+            <button type="submit" class="btn btn-secondary" id="btnConfirmarActivar" name="activarId" data-bs-dismiss="modal">Cerrar</button>
           </form>
         </div>
       </div>

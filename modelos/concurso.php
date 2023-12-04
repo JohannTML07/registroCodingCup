@@ -4,5 +4,6 @@
         public $nombre="";
         public $fechaInscripcion="";
         public $fechaCierre="";
+        public $estatus="";
     }
 ?>
